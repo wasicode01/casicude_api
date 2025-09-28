@@ -28,7 +28,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Reiniciar servicio
-        run: sudo systemctl restart casicude_api
+        run: sudo systemctl restart gymapi
 
 
      
