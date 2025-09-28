@@ -1,0 +1,18 @@
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+name: Deploy Casicude
+
+run-name: "Deploy :${{inputs.nombre_ejecucion}}"
+jobs:
+
+  build-and-deploy:      
+    runs-on: self-hosted
+    steps:
+      - name: 'Checkout'
+        uses: actions/checkout@main
+
+     
