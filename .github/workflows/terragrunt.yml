@@ -12,7 +12,23 @@ jobs:
   build-and-deploy:      
     runs-on: self-hosted
     steps:
-      - name: 'Checkout'
-        uses: actions/checkout@main
+      - name: Ir a carpeta del proyecto
+        run: cd /home/ubuntu/casicude_api
+
+      - name: Actualizar repo
+        run: |
+          cd /home/ubuntu/casicude_api
+          git fetch origin main
+          git reset --hard origin/main
+
+      - name: Instalar dependencias
+        run: |
+          cd /home/ubuntu/casicude_api
+          source venv/bin/activate
+          pip install -r requirements.txt
+
+      - name: Reiniciar servicio
+        run: sudo systemctl restart casicude_api
+
 
      
