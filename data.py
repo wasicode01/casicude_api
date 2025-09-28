@@ -3,6 +3,7 @@ from datetime import date
 groups = [
     {"id": 1, "name": "Pecho", "description": "Ejercicios de pecho"},
     {"id": 2, "name": "Piernas", "description": "Ejercicios de piernas"},
+    {"id": 2, "name": "Espalda", "description": "Ejercicios de espalda"},
 ]
 
 exercises = [
