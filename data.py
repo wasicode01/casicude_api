@@ -1,9 +1,9 @@
 from datetime import date
 
 groups = [
-    {"id": 1, "name": "Pecho", "description": "Ejercicios de pecho"},
-    {"id": 2, "name": "Piernas", "description": "Ejercicios de piernas"},
-    {"id": 3, "name": "Espalda", "description": "Ejercicios de espalda"},
+    {"id": 1, "name": "Pecho - Triceps", "description": "Ejercicios de pecho"},
+    {"id": 2, "name": "Espalda - Biceps", "description": "Ejercicios de piernas"},
+    {"id": 3, "name": "Piernas", "description": "Ejercicios de espalda"}
 ]
 
 exercises = [
