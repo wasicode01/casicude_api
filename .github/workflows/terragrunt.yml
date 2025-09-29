@@ -21,6 +21,10 @@ jobs:
           git fetch origin main
           git reset --hard origin/main
 
+      - name: pasar credenciales
+        run: |
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> $GITHUB_ENV
+
       - name: Instalar dependencias
         run: |
           cd /home/ubuntu/casicude_api
