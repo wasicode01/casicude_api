@@ -24,9 +24,23 @@ def get_db():
 def get_routines(db: Session = Depends(get_db)):
     return db.query(models.Routine).all()
 
-@app.get("/routines/{routine_id}", response_model=Routine)
+#@app.get("/routines/{routine_id}", response_model=Routine)
+#def get_routine(routine_id: int, db: Session = Depends(get_db)):
+#    routine = db.query(models.Routine).filter(models.Routine.id == routine_id).first()
+#    if not routine:
+#        raise HTTPException(status_code=404, detail="Routine not found")
+#    return routine*/
+
+@app.get("/routines/{routine_id}")
 def get_routine(routine_id: int, db: Session = Depends(get_db)):
     routine = db.query(models.Routine).filter(models.Routine.id == routine_id).first()
     if not routine:
-        raise HTTPException(status_code=404, detail="Routine not found")
-    return routine
+        return {"error": "Rutina no encontrada"}
+    return {
+        "id": routine.id,
+        "name": routine.name,
+        "exercises": [
+            {"id": e.id, "name": e.name, "rest time": e.rest_time}
+            for e in routine.exercises
+        ]
+    }
