@@ -40,7 +40,7 @@ def get_routine(routine_id: int, db: Session = Depends(get_db)):
         "id": routine.id,
         "name": routine.name,
         "exercises": [
-            {"id": e.id, "name": e.name, "rest time": e.rest_time}
+            {"id": e.id, "name": e.name, "rest_time": e.rest_time, "min_repetition" : e.min_repetition, "max_repetition": e.max_repetition, "num_rep": e.num_rep}
             for e in routine.exercises
         ]
     }
