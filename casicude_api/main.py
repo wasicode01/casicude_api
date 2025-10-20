@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 from fastapi import FastAPI, HTTPException
 from typing import List
 from casicude_api.data import groups, exercises
-from casicude_api.schemas import Routine
+from casicude_api.schemas import Routine, ExerciseRepetitionCreate, ExerciseRepetition
 from . import models, database
 
 app = FastAPI(title="Gym Personal API")
@@ -44,3 +44,29 @@ def get_routine(routine_id: int, db: Session = Depends(get_db)):
             for e in routine.exercises
         ]
     }
+
+
+@app.post("/repetitions", response_model=ExerciseRepetition)
+def create_repetition(rep: ExerciseRepetitionCreate, db: Session = Depends(get_db)):
+    # Verificar que el ejercicio existe
+    exercise = db.query(models.Exercise).filter(models.Exercise.id == rep.exercise_id).first()
+    if not exercise:
+        raise HTTPException(status_code=404, detail="Exercise not found")
+
+    # (Opcional) verificar rutina si se proporcionó
+    if rep.routine_id is not None:
+        routine = db.query(models.Routine).filter(models.Routine.id == rep.routine_id).first()
+        if not routine:
+            raise HTTPException(status_code=404, detail="Routine not found")
+
+    db_rep = models.ExerciseRepetition(
+        exercise_id=rep.exercise_id,
+        routine_id=rep.routine_id,
+        num_reps=rep.num_reps,
+        weight=rep.weight,
+        notes=rep.notes,
+    )
+    db.add(db_rep)
+    db.commit()
+    db.refresh(db_rep)
+    return db_rep

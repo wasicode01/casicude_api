@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, Boolean, Table, ForeignKey
+from sqlalchemy import Column, Integer, String, Boolean, Table, ForeignKey, BigInteger, Numeric, DateTime, Text
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 from .database import Base
 
 routine_exercise = Table(
@@ -29,3 +30,20 @@ class Exercise(Base):
     state = Column(Boolean)
     num_rep = Column(Integer)
     routines = relationship("Routine", secondary=routine_exercise, back_populates="exercises")
+    repetitions = relationship("ExerciseRepetition", back_populates="exercise")
+
+
+class ExerciseRepetition(Base):
+    __tablename__ = "exercise_repetitions"
+    
+    id = Column(BigInteger, primary_key=True, index=True)
+    exercise_id = Column(Integer, ForeignKey("exercise.id", ondelete="CASCADE"), nullable=False)
+    routine_id = Column(Integer, ForeignKey("routine.id", ondelete="SET NULL"), nullable=True)
+    num_reps = Column(Integer, nullable=False)
+    weight = Column(Numeric(8, 2), default=0.00)
+    performed_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    notes = Column(Text)
+    
+    # Relaciones
+    exercise = relationship("Exercise", back_populates="repetitions")
+    routine = relationship("Routine")
