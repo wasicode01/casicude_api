@@ -47,3 +47,12 @@ class ExerciseRepetition(Base):
     # Relaciones
     exercise = relationship("Exercise", back_populates="repetitions")
     routine = relationship("Routine")
+
+
+class User(Base):
+    __tablename__ = "user"
+
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String(150), unique=True, index=True, nullable=False)
+    hashed_password = Column(String, nullable=False)
+    is_active = Column(Boolean, default=True)

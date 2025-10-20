@@ -18,3 +18,8 @@ psycopg2-binary
 alembic
 asyncpg
 sqlalchemy[asyncio]
+
+# JWT / auth
+python-jose[cryptography]
+passlib[bcrypt]
+python-multipart
