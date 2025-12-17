@@ -16,7 +16,7 @@ SECRET_KEY = os.getenv("JWT_SECRET_KEY", "change_me_in_production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["argon2", "bcrypt_sha256", "bcrypt"], deprecated="auto")
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/token")
 
 
@@ -53,7 +53,7 @@ def authenticate_user(db: Session, username: str, password: str):
     return user
 
 
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(database.SessionLocal)):
+def get_current_user(token: str = Depends(oauth2_scheme)):
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -67,10 +67,15 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         token_data = TokenData(username=username)
     except JWTError:
         raise credentials_exception
-    user = get_user_by_username(db, username=token_data.username)
-    if user is None:
-        raise credentials_exception
-    return user
+
+    db = database.SessionLocal()
+    try:
+        user = get_user_by_username(db, username=token_data.username)
+        if user is None:
+            raise credentials_exception
+        return user
+    finally:
+        db.close()
 
 
 def get_current_active_user(current_user: models.User = Depends(get_current_user)):
